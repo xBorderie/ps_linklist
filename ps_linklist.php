@@ -90,7 +90,7 @@ class Ps_LinkList extends Module implements WidgetInterface
 		$tab->name = array();
 		foreach (Language::getLanguages(true) as $lang)
 			$tab->name[$lang['id_lang']] = "Link Widget";
-		$tab->id_parent = (int)Tab::getIdFromClassName('AdminThemes');
+		$tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
 		$tab->module = $this->name;
 		return $tab->add();
     }
