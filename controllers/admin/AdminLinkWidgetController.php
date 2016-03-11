@@ -71,16 +71,18 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function renderView()
     {
+        $title = $this->module->l('Link block configuration');
+
         $this->fields_form[]['form'] = array(
             'legend' => array(
-                'title' => $this->module->l('CMS block configuration'),
+                'title' => $title,
                 'icon' => 'icon-list-alt'
             ),
             'input' => array(
                 array(
-                    'type' => 'cms_blocks',
-                    'label' => $this->module->l('CMS Blocks'),
-                    'name' => 'cms_blocks',
+                    'type' => 'link_blocks',
+                    'label' => $this->module->l('Link Blocks'),
+                    'name' => 'link_blocks',
                     'values' => $this->repository->getCMSBlocksSortedByHook(),
                 ),
             ),
@@ -99,7 +101,7 @@ class AdminLinkWidgetController extends ModuleAdminController
 
         $helper = $this->buildHelper();
         $helper->submit_action = '';
-        $helper->title = $this->module->l('CMS Block configuration');
+        $helper->title = $title;
 
         $helper->fields_value = $this->fields_value;
 
@@ -113,7 +115,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->fields_form[0]['form'] = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => isset($block) ? $this->l('Edit the CMS block.') : $this->l('New CMS block'),
+                'title' => isset($block) ? $this->l('Edit the link block.') : $this->l('New link block'),
                 'icon' => isset($block) ? 'icon-edit' : 'icon-plus-square'
             ),
             'input' => array(
@@ -123,7 +125,7 @@ class AdminLinkWidgetController extends ModuleAdminController
                 ),
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Name of the CMS block'),
+                        'label' => $this->l('Name of the link block'),
                         'name' => 'name',
                         'lang' => true,
                         'desc' => $this->l('If you leave this field empty, the block name will use the category name by default.')

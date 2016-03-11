@@ -26,7 +26,7 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="label"}
-	{if $input.type == 'cms_blocks'}
+	{if $input.type == 'link_blocks'}
 
 	{else}
 		{$smarty.block.parent}
@@ -53,21 +53,21 @@
 {/block}
 
 {block name="input_row"}
-	{if $input.type == 'cms_blocks'}
+	{if $input.type == 'link_blocks'}
 		<div class="row">
 			<script type="text/javascript">
 				var come_from = '{$name_controller}';
 				var token = '{$token}';
 				var alternate = 1;
 			</script>
-			{foreach $input.values as $key => $cms_blocks_position}
+			{foreach $input.values as $key => $link_blocks_position}
 				<div class="col-lg-6">
 					<div class="panel">
 						<div class="panel-heading">
-							{$cms_blocks_position.hook_name}
-              <small>{$cms_blocks_position.hook_title}</small>
+							{$link_blocks_position.hook_name}
+              <small>{$link_blocks_position.hook_title}</small>
 						</div>
-						<table class="table tableDnD cms" id="cms_block_{$key%2}">
+						<table class="table tableDnD cms" id="link_block_{$key%2}">
 							<thead>
 								<tr class="nodrag nodrop">
 									<th>{l s='ID' mod='ps_linklist'}</th>
@@ -77,21 +77,21 @@
 								</tr>
 							</thead>
 							<tbody>
-								{foreach $cms_blocks_position.blocks as $cms_block}
-									<tr class="{if $key%2}alt_row{else}not_alt_row{/if} row_hover" id="tr_{$key%2}_{$cms_block['id_cms_block']}_{$cms_block['position']}">
-										<td>{$cms_block['id_cms_block']}</td>
-										<td class="center pointer dragHandle" id="td_{$key%2}_{$cms_block['id_cms_block']}">
+								{foreach $link_blocks_position.blocks as $link_block}
+									<tr class="{if $key%2}alt_row{else}not_alt_row{/if} row_hover" id="tr_{$key%2}_{$link_block['id_link_block']}_{$link_block['position']}">
+										<td>{$link_block['id_link_block']}</td>
+										<td class="center pointer dragHandle" id="td_{$key%2}_{$link_block['id_link_block']}">
 											<div class="dragGroup">
 												<div class="positions">
-													{$cms_block['position'] + 1}
+													{$link_block['position'] + 1}
 												</div>
 											</div>
 										</td>
-                    <td>{$cms_block['block_name']}</td>
+                    <td>{$link_block['block_name']}</td>
 										<td>
 											<div class="btn-group-action">
 												<div class="btn-group pull-right">
-													<a class="btn btn-default" href="{$current}&amp;edit{$identifier}&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='ps_linklist'}">
+													<a class="btn btn-default" href="{$current}&amp;edit{$identifier}&amp;id_link_block={(int)$link_block['id_link_block']}" title="{l s='Edit' mod='ps_linklist'}">
 														<i class="icon-edit"></i> {l s='Edit' mod='ps_linklist'}
 													</a>
 													<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -99,7 +99,7 @@
 													</button>
 													<ul class="dropdown-menu">
 													<li>
-														<a href="{$current}&amp;delete{$identifier}&amp;id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='ps_linklist'}">
+														<a href="{$current}&amp;delete{$identifier}&amp;id_link_block={(int)$link_block['id_link_block']}" title="{l s='Delete' mod='ps_linklist'}">
 															<i class="icon-trash"></i> {l s='Delete' mod='ps_linklist'}
 														</a>
 													</li>

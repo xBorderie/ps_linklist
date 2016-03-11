@@ -26,7 +26,7 @@
 
 class LinkBlock extends ObjectModel
 {
-    public $id_cms_block;
+    public $id_link_block;
     public $name;
     public $id_hook;
     public $position;
