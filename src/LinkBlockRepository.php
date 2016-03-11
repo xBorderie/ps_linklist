@@ -185,6 +185,49 @@ class LinkBlockRepository
         return $pages;
     }
 
+    public function getProductPages($id_lang = null)
+    {
+        $products = [];
+        $productPages = [
+            'prices-drop',
+            'new-products',
+            'best-sales',
+        ];
+
+        foreach ($productPages as $productPage) {
+            $meta = Meta::getMetaByPage($productPage, ($id_lang) ? (int)$id_lang : (int)Context::getContext()->language->id);
+            $products[] = [
+                'id_cms' => $productPage,
+                'title' => $meta['title'],
+            ];
+        }
+
+        $pages[]['pages'] = $products;
+
+        return $pages;
+    }
+
+    public function getStaticPages($id_lang = null)
+    {
+        $statics = [];
+        $staticPages = [
+            'contact',
+            'sitemap',
+        ];
+
+        foreach ($staticPages as $staticPage) {
+            $meta = Meta::getMetaByPage($staticPage, ($id_lang) ? (int)$id_lang : (int)Context::getContext()->language->id);
+            $statics[] = [
+                'id_cms' => $staticPage,
+                'title' => $meta['title'],
+            ];
+        }
+
+        $pages[]['pages'] = $statics;
+
+        return $pages;
+    }
+
     public function getCountByIdHook($id_hook)
     {
         $sql = "SELECT COUNT(*) FROM {$this->db_prefix}link_block

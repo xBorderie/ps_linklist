@@ -24,7 +24,21 @@ class LinkBlockPresenter
 
     private function makeLinks($content)
     {
-        return $this->makeCmsLinks($content['cms']);
+        $cmsLinks = $productLinks = $staticsLinks = [];
+
+        if (isset($content['cms'])) {
+            $cmsLinks = $this->makeCmsLinks($content['cms']);
+        }
+
+        if (isset($content['product'])) {
+            $productLinks = $this->makeProductLinks($content['product']);
+        }
+
+        if (isset($content['static'])) {
+            $staticsLinks = $this->makeStaticLinks($content['static']);
+        }
+
+        return array_merge($cmsLinks, $productLinks, $staticsLinks);
     }
 
     private function makeCmsLinks($cmsIds)
@@ -42,5 +56,39 @@ class LinkBlockPresenter
         }
 
         return $cmsLinks;
+    }
+
+    private function makeProductLinks($productIds)
+    {
+        $productLinks = [];
+        foreach ($productIds as $productId) {
+            $meta = Meta::getMetaByPage($productId, $this->language->id);
+            $productLinks[] = [
+                'id' => 'cms-page-'.$productId,
+                'class' => 'cms-page-link',
+                'title' => $meta['title'],
+                'description' => $meta['description'],
+                'url' => $this->link->getPageLink($productId, true),
+            ];
+        }
+
+        return $productLinks;
+    }
+
+    private function makeStaticLinks($staticIds)
+    {
+        $staticLinks = [];
+        foreach ($staticIds as $staticId) {
+            $meta = Meta::getMetaByPage($staticId, $this->language->id);
+            $staticLinks[] = [
+                'id' => 'cms-page-'.$staticId,
+                'class' => 'cms-page-link',
+                'title' => $meta['title'],
+                'description' => $meta['description'],
+                'url' => $this->link->getPageLink($staticId, true),
+            ];
+        }
+
+        return $staticLinks;
     }
 }
