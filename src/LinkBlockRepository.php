@@ -213,6 +213,7 @@ class LinkBlockRepository
         $staticPages = [
             'contact',
             'sitemap',
+            'stores',
         ];
 
         foreach ($staticPages as $staticPage) {
