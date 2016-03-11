@@ -1,7 +1,7 @@
-{foreach $cmsBlocks as $cmsBlock}
-  <h3>{$cmsBlock.title}</h3>
+{foreach $linkBlocks as $linkBlock}
+  <h3>{$linkBlock.title}</h3>
   <ul>
-    {foreach $cmsBlock.links as $link}
+    {foreach $linkBlock.links as $link}
       <li>
         <a  id="{$link.id}"
             class="{$link.class}"
