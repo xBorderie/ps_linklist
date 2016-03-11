@@ -47,6 +47,8 @@ class AdminLinkWidgetController extends ModuleAdminController
             $block->name = Tools::getValue('name');
             $block->id_hook = Tools::getValue('id_hook');
             $block->content['cms'] = (array)Tools::getValue('cms');
+            $block->content['product'] = (array)Tools::getValue('product');
+            $block->content['static'] = (array)Tools::getValue('static');
             $block->save();
 
             $hook_name = Hook::getNameById(Tools::getValue('id_hook'));
@@ -146,6 +148,20 @@ class AdminLinkWidgetController extends ModuleAdminController
                     'label' => $this->l('CMS content'),
                     'name' => 'cms[]',
                     'values' => $this->repository->getCmsPages(),
+                    'desc' => $this->l('Please mark every page that you want to display in this block.')
+                ),
+                array(
+                    'type' => 'product_pages',
+                    'label' => $this->l('Product pages'),
+                    'name' => 'product[]',
+                    'values' => $this->repository->getProductPages(),
+                    'desc' => $this->l('Please mark every page that you want to display in this block.')
+                ),
+                array(
+                    'type' => 'static_pages',
+                    'label' => $this->l('Static content'),
+                    'name' => 'static[]',
+                    'values' => $this->repository->getStaticPages(),
                     'desc' => $this->l('Please mark every page that you want to display in this block.')
                 ),
             ),

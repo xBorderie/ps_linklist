@@ -158,6 +158,48 @@
       </div>
     {/foreach}
 
+    {elseif $input.type == 'product_pages' || $input.type == 'static_pages'}
+
+      {foreach $input.values as $cms_category}
+        <div class="row">
+          <div class="col-lg-9 col-lg-offset-3">
+            <div class="panel">
+              <div class="panel-heading">
+                {$input.label}
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" name="checkme" id="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$input.name}', this.checked)" />
+                    </th>
+                    <th>{l s='Name' mod='ps_linklist'}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {foreach $cms_category.pages as $key => $page}
+                    <tr {if $key%2}class="alt_row"{/if}>
+                      <td>
+                        {if $input.type == 'product_pages'}
+                          <input type="checkbox" class="cmsBox" name="{$input.name}" id="{$page.id_cms}" value="{$page.id_cms}" {if in_array($page.id_cms, $fields_value['content']['product'])}checked="checked"{/if} />
+                        {elseif $input.type == 'static_pages'}
+                          <input type="checkbox" class="cmsBox" name="{$input.name}" id="{$page.id_cms}" value="{$page.id_cms}" {if in_array($page.id_cms, $fields_value['content']['static'])}checked="checked"{/if} />
+                        {/if}
+                      </td>
+                      <td>
+                        <label class="control-label" for="{$page.id_cms}">
+                          {$page.title|escape}
+                        </label>
+                      </td>
+                    </tr>
+                  {/foreach}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {/foreach}
+
 	{else}
 		{$smarty.block.parent}
 	{/if}
