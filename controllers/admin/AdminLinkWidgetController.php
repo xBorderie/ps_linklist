@@ -1,6 +1,6 @@
 <?php
 
-class AdminLinkWidget extends ModuleAdminController
+class AdminLinkWidgetController extends ModuleAdminController
 {
     public $identifier = 'LinkBlock';
 
