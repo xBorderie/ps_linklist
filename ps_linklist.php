@@ -59,7 +59,7 @@ class Ps_LinkList extends Module implements WidgetInterface
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
 
         $this->linkBlockPresenter  = new LinkBlockPresenter(
-            $this->context->link,
+            new Link(),
             $this->context->language
         );
         $this->linkBlockRepository = new LinkBlockRepository(
