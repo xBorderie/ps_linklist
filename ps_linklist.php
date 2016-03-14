@@ -72,7 +72,9 @@ class Ps_LinkList extends Module implements WidgetInterface
     {
         return parent::install()
             && $this->installTab()
-            && $this->linkBlockRepository->createTables();
+            && $this->linkBlockRepository->createTables()
+            && $this->linkBlockRepository->installFixtures()
+            && $this->registerHook('displayFooter');
     }
 
     public function uninstall()
