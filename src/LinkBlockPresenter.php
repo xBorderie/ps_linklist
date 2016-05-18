@@ -13,13 +13,13 @@ class LinkBlockPresenter
 
     public function present(LinkBlock $cmsBlock)
     {
-        return [
+        return array(
             'id' => $cmsBlock->id,
             'title' => $cmsBlock->name[$this->language->id],
             'hook' => (new Hook($cmsBlock->id_hook))->name,
             'position' => $cmsBlock->position,
-            'links' => $this->makeLinks($cmsBlock->content)
-        ];
+            'links' => $this->makeLinks($cmsBlock->content),
+        );
     }
 
     private function makeLinks($content)
@@ -43,16 +43,20 @@ class LinkBlockPresenter
 
     private function makeCmsLinks($cmsIds)
     {
-        $cmsLinks = [];
+        $cmsLinks = array();
+
         foreach ($cmsIds as $cmsId) {
             $cms = new CMS($cmsId);
-            $cmsLinks[] = [
-                'id' => 'cms-page-'.$cms->id,
-                'class' => 'cms-page-link',
-                'title' => $cms->meta_title[$this->language->id],
-                'description' => $cms->meta_description[$this->language->id],
-                'url' => $this->link->getCMSLink($cms),
-            ];
+            if(null !== $cms->id) {
+                $cmsLinks[] = array(
+                    'id' => 'cms-page-'.$cms->id,
+                    'class' => 'cms-page-link',
+                    'title' => $cms->meta_title[$this->language->id],
+                    'description' => $cms->meta_description[$this->language->id],
+                    'url' => $this->link->getCMSLink($cms),
+                );
+            }
+
         }
 
         return $cmsLinks;
@@ -60,16 +64,18 @@ class LinkBlockPresenter
 
     private function makeProductLinks($productIds)
     {
-        $productLinks = [];
+        $productLinks = array();
         foreach ($productIds as $productId) {
-            $meta = Meta::getMetaByPage($productId, $this->language->id);
-            $productLinks[] = [
-                'id' => 'cms-page-'.$productId,
-                'class' => 'cms-page-link',
-                'title' => $meta['title'],
-                'description' => $meta['description'],
-                'url' => $this->link->getPageLink($productId, true),
-            ];
+            if(false !== $productId) {
+                $meta = Meta::getMetaByPage($productId, $this->language->id);
+                $productLinks[] = array(
+                    'id' => 'cms-page-'.$productId,
+                    'class' => 'cms-page-link',
+                    'title' => $meta['title'],
+                    'description' => $meta['description'],
+                    'url' => $this->link->getPageLink($productId, true),
+                );
+            }
         }
 
         return $productLinks;
@@ -77,16 +83,16 @@ class LinkBlockPresenter
 
     private function makeStaticLinks($staticIds)
     {
-        $staticLinks = [];
+        $staticLinks = array();
         foreach ($staticIds as $staticId) {
             $meta = Meta::getMetaByPage($staticId, $this->language->id);
-            $staticLinks[] = [
+            $staticLinks[] = array(
                 'id' => 'cms-page-'.$staticId,
                 'class' => 'cms-page-link',
                 'title' => $meta['title'],
                 'description' => $meta['description'],
                 'url' => $this->link->getPageLink($staticId, true),
-            ];
+            );
         }
 
         return $staticLinks;
