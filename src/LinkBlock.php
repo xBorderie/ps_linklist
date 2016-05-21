@@ -56,11 +56,11 @@ class LinkBlock extends ObjectModel
         }
 
         if (is_null($this->content)) {
-            $this->content = [
-                'cms' => [],
-                'product' => [],
-                'static' => [],
-            ];
+            $this->content = array(
+                'cms' => array(),
+                'product' => array(),
+                'static' => array(),
+            );
         }
     }
 

@@ -58,7 +58,7 @@ class Ps_LinkList extends Module implements WidgetInterface
         $this->secure_key = Tools::encrypt($this->name);
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
 
-        $this->linkBlockPresenter  = new LinkBlockPresenter(
+        $this->linkBlockPresenter = new LinkBlockPresenter(
             new Link(),
             $this->context->language
         );
@@ -90,8 +90,9 @@ class Ps_LinkList extends Module implements WidgetInterface
 		$tab->active = 1;
 		$tab->class_name = "AdminLinkWidget";
 		$tab->name = array();
-		foreach (Language::getLanguages(true) as $lang)
+		foreach (Language::getLanguages(true) as $lang) {
 			$tab->name[$lang['id_lang']] = "Link Widget";
+        }
 		$tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
 		$tab->module = $this->name;
 		return $tab->add();
@@ -125,7 +126,7 @@ class Ps_LinkList extends Module implements WidgetInterface
         $id_hook = Hook::getIdByName($hookName);
         $linkBlocks = $this->linkBlockRepository->getByIdHook($id_hook);
 
-        $blocks = [];
+        $blocks = array();
         foreach ($linkBlocks as $block) {
             $blocks[] = $this->linkBlockPresenter->present($block);
         }

@@ -80,17 +80,17 @@ class LinkBlockRepository
 
         $blocks = Db::getInstance()->executeS($sql);
 
-        $orderedBlocks = [];
+        $orderedBlocks = array();
         foreach ($blocks as $block) {
             if (!isset($orderedBlocks[$block['id_hook']])) {
                 $id_hook = ($block['id_hook']) ?: 'not_hooked';
-                $orderedBlocks[$id_hook] = [
+                $orderedBlocks[$id_hook] = array(
                     'id_hook' => $block['id_hook'],
                     'hook_name' => $block['hook_name'],
                     'hook_title' => $block['hook_title'],
                     'hook_description' => $block['hook_description'],
-                    'blocks' => [],
-                ];
+                    'blocks' => array(),
+                );
             }
         }
 
@@ -132,9 +132,9 @@ class LinkBlockRepository
                 ";
         $ids = $this->db->executeS($sql);
 
-        $cmsBlock = [];
+        $cmsBlock = array();
         foreach ($ids as $id) {
-            $cmsBlock[] = new LinkBlock($id['id_link_block']);
+            $cmsBlock[] = new LinkBlock((int)$id['id_link_block']);
         }
 
         return $cmsBlock;
@@ -187,19 +187,19 @@ class LinkBlockRepository
 
     public function getProductPages($id_lang = null)
     {
-        $products = [];
-        $productPages = [
+        $products = array();
+        $productPages = array(
             'prices-drop',
             'new-products',
             'best-sales',
-        ];
+        );
 
         foreach ($productPages as $productPage) {
             $meta = Meta::getMetaByPage($productPage, ($id_lang) ? (int)$id_lang : (int)Context::getContext()->language->id);
-            $products[] = [
+            $products[] = array(
                 'id_cms' => $productPage,
                 'title' => $meta['title'],
-            ];
+            );
         }
 
         $pages[]['pages'] = $products;
@@ -209,12 +209,12 @@ class LinkBlockRepository
 
     public function getStaticPages($id_lang = null)
     {
-        $statics = [];
-        $staticPages = [
+        $statics = array();
+        $staticPages = array(
             'contact',
             'sitemap',
             'stores',
-        ];
+        );
 
         foreach ($staticPages as $staticPage) {
             $meta = Meta::getMetaByPage($staticPage, ($id_lang) ? (int)$id_lang : (int)Context::getContext()->language->id);
@@ -240,7 +240,7 @@ class LinkBlockRepository
     public function installFixtures()
     {
         $success = true;
-        $id_hook = Hook::getIdByName('displayFooter');
+        $id_hook = (int)Hook::getIdByName('displayFooter');
 
         $queries = [
             'INSERT INTO `'._DB_PREFIX_.'link_block` (`id_link_block`, `id_hook`, `position`, `content`) VALUES

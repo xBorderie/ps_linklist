@@ -45,7 +45,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         if (Tools::isSubmit('submit'.$this->identifier)) {
             $block = new LinkBlock(Tools::getValue('id_link_block'));
             $block->name = Tools::getValue('name');
-            $block->id_hook = Tools::getValue('id_hook');
+            $block->id_hook = (int)Tools::getValue('id_hook');
             $block->content['cms'] = (array)Tools::getValue('cms');
             $block->content['product'] = (array)Tools::getValue('product');
             $block->content['static'] = (array)Tools::getValue('static');
@@ -61,8 +61,8 @@ class AdminLinkWidgetController extends ModuleAdminController
             $block = new LinkBlock(Tools::getValue('id_link_block'));
             $block->delete();
 
-            if (!$this->repository->getCountByIdHook($block->id_hook)) {
-                Hook::unregisterHook($this->module, Hook::getNameById($block->id_hook));
+            if (!$this->repository->getCountByIdHook((int)$block->id_hook)) {
+                Hook::unregisterHook($this->module, Hook::getNameById((int)$block->id_hook));
             }
 
             Tools::redirectAdmin($this->context->link->getAdminLink('Admin'.$this->name));
@@ -180,7 +180,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         );
 
         if ($id_hook = Tools::getValue('id_hook')) {
-            $block->id_hook = $id_hook;
+            $block->id_hook = (int)$id_hook;
         }
 
         if (Tools::getValue('name')) {
@@ -240,10 +240,10 @@ class AdminLinkWidgetController extends ModuleAdminController
     private function addNameArrayToPost()
     {
         $languages = Language::getLanguages();
-        $names = [];
+        $names = array();
         foreach ($languages as $lang) {
-            if ($name = Tools::getValue('name_'.$lang['id_lang'])) {
-                $names[$lang['id_lang']] = $name;
+            if ($name = Tools::getValue('name_'.(int)$lang['id_lang'])) {
+                $names[(int)$lang['id_lang']] = $name;
             }
         }
         $_POST['name'] = $names;
