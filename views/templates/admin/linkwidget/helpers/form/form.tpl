@@ -60,7 +60,7 @@
 				var token = '{$token}';
 				var alternate = 1;
 			</script>
-			{foreach $input.values as $key => $link_blocks_position}
+			{foreach $input.values as $key => $link_blocks_position name='blocksLoop'}
 				<div class="col-lg-6">
 					<div class="panel">
 						<div class="panel-heading">
@@ -113,6 +113,7 @@
 						</table>
 					</div>
 				</div>
+                {if $smarty.foreach.blocksLoop.index%2}<div class="clearfix"></div>{/if}
 			{/foreach}
 		</div>
 
