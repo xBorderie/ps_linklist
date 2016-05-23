@@ -86,16 +86,16 @@ class Ps_LinkList extends Module implements WidgetInterface
 
     public function installTab()
     {
-		$tab = new Tab();
-		$tab->active = 1;
-		$tab->class_name = "AdminLinkWidget";
-		$tab->name = array();
-		foreach (Language::getLanguages(true) as $lang) {
-			$tab->name[$lang['id_lang']] = "Link Widget";
+        $tab = new Tab();
+        $tab->active = 1;
+        $tab->class_name = "AdminLinkWidget";
+        $tab->name = array();
+        foreach (Language::getLanguages(true) as $lang) {
+            $tab->name[$lang['id_lang']] = "Link Widget";
         }
-		$tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
-		$tab->module = $this->name;
-		return $tab->add();
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
+        $tab->module = $this->name;
+        return $tab->add();
     }
 
     public function uninstallTab()

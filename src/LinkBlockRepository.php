@@ -215,7 +215,7 @@ class LinkBlockRepository
             'sitemap',
             'stores',
             'authentication',
-            'my-account'
+            'my-account',
         );
 
         foreach ($staticPages as $staticPage) {
