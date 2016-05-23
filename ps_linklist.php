@@ -1,6 +1,6 @@
 <?php
 /*
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
+ *  @copyright  2007-2016 PrestaShop SA
  *  @version  Release: $Revision: 7060 $
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -58,7 +58,7 @@ class Ps_LinkList extends Module implements WidgetInterface
         $this->secure_key = Tools::encrypt($this->name);
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
 
-        $this->linkBlockPresenter  = new LinkBlockPresenter(
+        $this->linkBlockPresenter = new LinkBlockPresenter(
             new Link(),
             $this->context->language
         );
@@ -86,15 +86,16 @@ class Ps_LinkList extends Module implements WidgetInterface
 
     public function installTab()
     {
-		$tab = new Tab();
-		$tab->active = 1;
-		$tab->class_name = "AdminLinkWidget";
-		$tab->name = array();
-		foreach (Language::getLanguages(true) as $lang)
-			$tab->name[$lang['id_lang']] = "Link Widget";
-		$tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
-		$tab->module = $this->name;
-		return $tab->add();
+        $tab = new Tab();
+        $tab->active = 1;
+        $tab->class_name = "AdminLinkWidget";
+        $tab->name = array();
+        foreach (Language::getLanguages(true) as $lang) {
+            $tab->name[$lang['id_lang']] = "Link Widget";
+        }
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentThemes');
+        $tab->module = $this->name;
+        return $tab->add();
     }
 
     public function uninstallTab()
@@ -125,7 +126,7 @@ class Ps_LinkList extends Module implements WidgetInterface
         $id_hook = Hook::getIdByName($hookName);
         $linkBlocks = $this->linkBlockRepository->getByIdHook($id_hook);
 
-        $blocks = [];
+        $blocks = array();
         foreach ($linkBlocks as $block) {
             $blocks[] = $this->linkBlockPresenter->present($block);
         }
