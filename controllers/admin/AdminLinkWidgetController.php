@@ -117,7 +117,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->fields_form[0]['form'] = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => isset($block) ? $this->getTranslator()->trans('Edit the link block.', array(), 'Modules.LinkList') : $this->getTranslator()->trans('New link block' 'Modules.LinkList'),
+                'title' => isset($block) ? $this->getTranslator()->trans('Edit the link block.', array(), 'Modules.LinkList') : $this->getTranslator()->trans('New link block', array(), 'Modules.LinkList'),
                 'icon' => isset($block) ? 'icon-edit' : 'icon-plus-square'
             ),
             'input' => array(
@@ -152,14 +152,14 @@ class AdminLinkWidgetController extends ModuleAdminController
                 ),
                 array(
                     'type' => 'product_pages',
-                    'label' => $this->getTranslator()->trans('Product pages',array(), 'Modules.LinkList'),
+                    'label' => $this->getTranslator()->trans('Product pages', array(), 'Modules.LinkList'),
                     'name' => 'product[]',
                     'values' => $this->repository->getProductPages(),
                     'desc' => $this->getTranslator()->trans('Please mark every page that you want to display in this block.', array(), 'Modules.LinkList')
                 ),
                 array(
                     'type' => 'static_pages',
-                    'label' => $this->getTranslator()->trans('Static content',array(), 'Modules.LinkList'),
+                    'label' => $this->getTranslator()->trans('Static content', array(), 'Modules.LinkList'),
                     'name' => 'static[]',
                     'values' => $this->repository->getStaticPages(),
                     'desc' => $this->getTranslator()->trans('Please mark every page that you want to display in this block.', array(), 'Modules.LinkList')
