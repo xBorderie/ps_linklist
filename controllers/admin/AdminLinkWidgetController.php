@@ -10,7 +10,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->display = 'view';
 
         parent::__construct();
-        $this->meta_title = $this->module->l('Link Widget');
+        $this->meta_title = $this->module->getTranslator()->trans('Link Widget', array(), 'Modules.LinkList');
 
         if (!$this->module->active) {
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminHome'));
@@ -73,7 +73,7 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function renderView()
     {
-        $title = $this->module->l('Link block configuration');
+        $title = $this->module->getTranslator()->trans('Link block configuration', array(), 'Modules.LinkList');
 
         $this->fields_form[]['form'] = array(
             'legend' => array(
@@ -83,14 +83,14 @@ class AdminLinkWidgetController extends ModuleAdminController
             'input' => array(
                 array(
                     'type' => 'link_blocks',
-                    'label' => $this->module->l('Link Blocks'),
+                    'label' => $this->module->getTranslator()->trans('Link Blocks', array(), 'Modules.LinkList'),
                     'name' => 'link_blocks',
                     'values' => $this->repository->getCMSBlocksSortedByHook(),
                 ),
             ),
             'buttons' => array(
                 'newBlock' => array(
-                    'title' => $this->module->l('New block'),
+                    'title' => $this->module->getTranslator()->trans('New block', array(), 'Modules.LinkList'),
                     'href' => $this->context->link->getAdminLink('Admin'.$this->name).'&amp;addLinkBlock',
                     'class' => 'pull-right',
                     'icon' => 'process-icon-new'
@@ -117,7 +117,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->fields_form[0]['form'] = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => isset($block) ? $this->l('Edit the link block.') : $this->l('New link block'),
+                'title' => isset($block) ? $this->getTranslator()->trans('Edit the link block.', array(), 'Modules.LinkList') : $this->getTranslator()->trans('New link block' 'Modules.LinkList'),
                 'icon' => isset($block) ? 'icon-edit' : 'icon-plus-square'
             ),
             'input' => array(
@@ -127,14 +127,14 @@ class AdminLinkWidgetController extends ModuleAdminController
                 ),
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Name of the link block'),
+                        'label' => $this->getTranslator()->trans('Name of the link block', array(), 'Modules.LinkList'),
                         'name' => 'name',
                         'lang' => true,
-                        'desc' => $this->l('If you leave this field empty, the block name will use the category name by default.')
+                        'desc' => $this->getTranslator()->trans('If you leave this field empty, the block name will use the category name by default.', array(), 'Modules.LinkList')
                     ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Hook'),
+                    'label' => $this->getTranslator()->trans('Hook', array(), 'Admin.Global'),
                     'name' => 'id_hook',
                     'class' => 'input-lg',
                     'options' => array(
@@ -145,29 +145,29 @@ class AdminLinkWidgetController extends ModuleAdminController
                 ),
                 array(
                     'type' => 'cms_pages',
-                    'label' => $this->l('CMS content'),
+                    'label' => $this->getTranslator()->trans('Content pages', array(), 'Modules.LinkList'),
                     'name' => 'cms[]',
                     'values' => $this->repository->getCmsPages(),
-                    'desc' => $this->l('Please mark every page that you want to display in this block.')
+                    'desc' => $this->getTranslator()->trans('Please mark every page that you want to display in this block.', array(), 'Modules.LinkList')
                 ),
                 array(
                     'type' => 'product_pages',
-                    'label' => $this->l('Product pages'),
+                    'label' => $this->getTranslator()->trans('Product pages',array(), 'Modules.LinkList'),
                     'name' => 'product[]',
                     'values' => $this->repository->getProductPages(),
-                    'desc' => $this->l('Please mark every page that you want to display in this block.')
+                    'desc' => $this->getTranslator()->trans('Please mark every page that you want to display in this block.', array(), 'Modules.LinkList')
                 ),
                 array(
                     'type' => 'static_pages',
-                    'label' => $this->l('Static content'),
+                    'label' => $this->getTranslator()->trans('Static content',array(), 'Modules.LinkList'),
                     'name' => 'static[]',
                     'values' => $this->repository->getStaticPages(),
-                    'desc' => $this->l('Please mark every page that you want to display in this block.')
+                    'desc' => $this->getTranslator()->trans('Please mark every page that you want to display in this block.', array(), 'Modules.LinkList')
                 ),
             ),
             'buttons' => array(
                 'cancelBlock' => array(
-                    'title' => $this->l('Cancel'),
+                    'title' => $this->getTranslator()->trans('Cancel', array(), 'Admin.Actions'),
                     'href' => (Tools::safeOutput(Tools::getValue('back', false)))
                                 ?: $this->context->link->getAdminLink('Admin'.$this->name),
                     'icon' => 'process-icon-cancel'
@@ -175,7 +175,7 @@ class AdminLinkWidgetController extends ModuleAdminController
             ),
             'submit' => array(
                 'name' => 'submit'.$this->identifier,
-                'title' => $this->l('Save'),
+                'title' => $this->getTranslator()->trans('Save', array(), 'Admin.Actions'),
             )
         );
 
@@ -225,8 +225,8 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function initToolBarTitle()
     {
-        $this->toolbar_title[] = $this->module->l('Themes');
-        $this->toolbar_title[] = $this->module->l('Link Widget');
+        $this->toolbar_title[] = $this->module->getTranslator()->trans('Themes', array(), 'Modules.LinkList');
+        $this->toolbar_title[] = $this->module->getTranslator()->trans('Link Widget', array(), 'Modules.LinkList');
     }
 
     public function setMedia()
