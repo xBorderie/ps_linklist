@@ -253,7 +253,7 @@ class LinkBlockRepository
         foreach (Language::getLanguages(true, Context::getContext()->shop->id) as $lang) {
             $queries[] = 'INSERT INTO `'._DB_PREFIX_.'link_block_lang` (`id_link_block`, `id_lang`, `name`) VALUES
                 (1,'.$lang['id_lang'].', \'Products\'),
-                (2, '.$lang['id_lang'].', \'Information\')'
+                (2, '.$lang['id_lang'].', \'Our company\')'
             ;
         }
 
