@@ -37,10 +37,11 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function postProcess()
     {
-        $this->addNameArrayToPost();
-        if (!$this->validateForm($_POST)) {
+        if (!$this->validateLinkName($_POST)) {
             return false;
         }
+
+        $this->addNameArrayToPost();
 
         if (Tools::isSubmit('submit'.$this->identifier)) {
             $block = new LinkBlock(Tools::getValue('id_link_block'));
@@ -125,13 +126,13 @@ class AdminLinkWidgetController extends ModuleAdminController
                     'type' => 'hidden',
                     'name' => 'id_link_block',
                 ),
-                    array(
-                        'type' => 'text',
-                        'label' => $this->module->getTranslator()->trans('Name of the link block', array(), 'Modules.LinkList'),
-                        'name' => 'name',
-                        'lang' => true,
-                        'desc' => $this->module->getTranslator()->trans('If you leave this field empty, the block name will use the category name by default.', array(), 'Modules.LinkList')
-                    ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->module->getTranslator()->trans('Name of the link block', array(), 'Modules.LinkList'),
+                    'name' => 'name',
+                    'lang' => true,
+                    'required' => true,
+                ),
                 array(
                     'type' => 'select',
                     'label' => $this->module->getTranslator()->trans('Hook', array(), 'Admin.Global'),
@@ -218,9 +219,36 @@ class AdminLinkWidgetController extends ModuleAdminController
         return $helper;
     }
 
-    public function validateForm($data)
+    /**
+     * @param array $fields
+     * @return bool
+     */
+    public function validateLinkName(array $fields)
     {
+        $defaultLanguageId = $this->getDefaultLanguageId();
+
+        foreach ($fields as $name => $value) {
+            if ('name_' . $defaultLanguageId === $name) {
+                if (is_string($value) && empty(trim($value))) {
+                    $this->errors[] = $this->module->getTranslator()->trans(
+                        'The "Name of the link block" is required', array(), 'Modules.LinkList');
+
+                    return false;
+                }
+            }
+        }
+
         return true;
+    }
+
+    /**
+     * @return null
+     */
+    protected function getDefaultLanguageId()
+    {
+        return Configuration::get('PS_LANG_DEFAULT', null,
+            $this->context->shop->id_shop_group,
+            $this->context->shop->id);
     }
 
     public function initToolBarTitle()
