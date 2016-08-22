@@ -85,14 +85,16 @@ class LinkBlockPresenter
     {
         $staticLinks = array();
         foreach ($staticIds as $staticId) {
-            $meta = Meta::getMetaByPage($staticId, (int)$this->language->id);
-            $staticLinks[] = array(
-                'id' => 'link-static-page-'.$staticId,
-                'class' => 'cms-page-link',
-                'title' => $meta['title'],
-                'description' => $meta['description'],
-                'url' => $this->link->getPageLink($staticId, true),
-            );
+            if(false !== $staticId) {
+                $meta = Meta::getMetaByPage($staticId, (int)$this->language->id);
+                $staticLinks[] = array(
+                    'id' => 'link-static-page-'.$staticId,
+                    'class' => 'cms-page-link',
+                    'title' => $meta['title'],
+                    'description' => $meta['description'],
+                    'url' => $this->link->getPageLink($staticId, true),
+                );
+            }
         }
 
         return $staticLinks;
