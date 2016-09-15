@@ -59,8 +59,8 @@ class LinkBlockRepository
 
     public function getCMSBlocksSortedByHook($id_shop = null, $id_lang = null)
     {
-        $id_lang = ($id_lang) ?: (int)Context::getContext()->language->id;
-        $id_shop = ($id_shop) ?: (int)Context::getContext()->shop->id;
+        $id_lang = (int) (($id_lang) ?: Context::getContext()->language->id);
+        $id_shop = (int) (($id_shop) ?: Context::getContext()->shop->id);
 
         $sql = 'SELECT
                 bc.`id_link_block`,
@@ -126,6 +126,8 @@ class LinkBlockRepository
 
     public function getByIdHook($id_hook)
     {
+        $id_hook = (int) $id_hook;
+
         $sql = "SELECT cb.`id_link_block`
                     FROM {$this->db_prefix}link_block cb
                     WHERE `id_hook` = $id_hook
@@ -142,7 +144,8 @@ class LinkBlockRepository
 
     public function getCmsPages($id_lang = null)
     {
-        $id_lang = ($id_lang) ?: Context::getContext()->language->id;
+        $id_lang = (int) (($id_lang) ?: Context::getContext()->language->id);
+        $this->shop->id = (int) $this->shop->id;
 
         $categories = "SELECT  cc.`id_cms_category`,
                         ccl.`name`,
@@ -233,6 +236,8 @@ class LinkBlockRepository
 
     public function getCountByIdHook($id_hook)
     {
+        $id_hook = (int) $id_hook;
+
         $sql = "SELECT COUNT(*) FROM {$this->db_prefix}link_block
                     WHERE `id_hook` = $id_hook";
 
