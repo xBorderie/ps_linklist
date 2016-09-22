@@ -2,7 +2,7 @@
 
 class AdminLinkWidgetController extends ModuleAdminController
 {
-    public $identifier = 'LinkBlock';
+    public $className = 'LinkBlock';
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function init()
     {
-        if (Tools::isSubmit('edit'.$this->identifier)) {
+        if (Tools::isSubmit('edit'.$this->className)) {
             $this->display = 'edit';
         } elseif (Tools::isSubmit('addLinkBlock')) {
             $this->display = 'add';
@@ -37,19 +37,12 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function postProcess()
     {
-        $this->addNameArrayToPost();
-        if (!$this->validateForm($_POST)) {
-            return false;
-        }
+        if (Tools::isSubmit('submit'.$this->className)) {
+            $this->addNameArrayToPost();
 
-        if (Tools::isSubmit('submit'.$this->identifier)) {
-            $block = new LinkBlock(Tools::getValue('id_link_block'));
-            $block->name = Tools::getValue('name');
-            $block->id_hook = (int)Tools::getValue('id_hook');
-            $block->content['cms'] = (array)Tools::getValue('cms');
-            $block->content['product'] = (array)Tools::getValue('product');
-            $block->content['static'] = (array)Tools::getValue('static');
-            $block->save();
+            if (!$this->processSave()) {
+                return false;
+            }
 
             $hook_name = Hook::getNameById(Tools::getValue('id_hook'));
             if (!Hook::isModuleRegisteredOnHook($this->module, $hook_name, $this->context->shop->id)) {
@@ -57,7 +50,7 @@ class AdminLinkWidgetController extends ModuleAdminController
             }
 
             Tools::redirectAdmin($this->context->link->getAdminLink('Admin'.$this->name));
-        } elseif (Tools::isSubmit('delete'.$this->identifier)) {
+        } elseif (Tools::isSubmit('delete'.$this->className)) {
             $block = new LinkBlock(Tools::getValue('id_link_block'));
             $block->delete();
 
@@ -125,13 +118,13 @@ class AdminLinkWidgetController extends ModuleAdminController
                     'type' => 'hidden',
                     'name' => 'id_link_block',
                 ),
-                    array(
-                        'type' => 'text',
-                        'label' => $this->module->getTranslator()->trans('Name of the link block', array(), 'Modules.LinkList'),
-                        'name' => 'name',
-                        'lang' => true,
-                        'desc' => $this->module->getTranslator()->trans('If you leave this field empty, the block name will use the category name by default.', array(), 'Modules.LinkList')
-                    ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->module->getTranslator()->trans('Name of the link block', array(), 'Modules.LinkList'),
+                    'name' => 'name',
+                    'lang' => true,
+                    'required' => true,
+                ),
                 array(
                     'type' => 'select',
                     'label' => $this->module->getTranslator()->trans('Hook', array(), 'Admin.Global'),
@@ -174,7 +167,7 @@ class AdminLinkWidgetController extends ModuleAdminController
                 )
             ),
             'submit' => array(
-                'name' => 'submit'.$this->identifier,
+                'name' => 'submit'.$this->className,
                 'title' => $this->module->getTranslator()->trans('Save', array(), 'Admin.Actions'),
             )
         );
@@ -190,7 +183,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $helper = $this->buildHelper();
         if (isset($id_link_block)) {
             $helper->currentIndex = AdminController::$currentIndex.'&id_link_block='.$id_link_block;
-            $helper->submit_action = 'edit'.$this->identifier;
+            $helper->submit_action = 'edit'.$this->className;
         } else {
             $helper->submit_action = 'addLinkBlock';
         }
@@ -206,7 +199,7 @@ class AdminLinkWidgetController extends ModuleAdminController
 
         $helper->module = $this->module;
         $helper->override_folder = 'linkwidget/';
-        $helper->identifier = $this->identifier;
+        $helper->identifier = $this->className;
         $helper->token = Tools::getAdminTokenLite('Admin'.$this->name);
         $helper->languages = $this->_languages;
         $helper->currentIndex = $this->context->link->getAdminLink('Admin'.$this->name);
@@ -216,11 +209,6 @@ class AdminLinkWidgetController extends ModuleAdminController
         $helper->toolbar_btn = $this->initToolbar();
 
         return $helper;
-    }
-
-    public function validateForm($data)
-    {
-        return true;
     }
 
     public function initToolBarTitle()
@@ -246,6 +234,6 @@ class AdminLinkWidgetController extends ModuleAdminController
                 $names[(int)$lang['id_lang']] = $name;
             }
         }
-        $_POST['name'] = $names;
+        $_POST['name_link_block'] = $names;
     }
 }
