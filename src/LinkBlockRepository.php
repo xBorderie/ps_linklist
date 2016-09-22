@@ -252,7 +252,7 @@ class LinkBlockRepository
         $queries = [
             'INSERT INTO `'._DB_PREFIX_.'link_block` (`id_link_block`, `id_hook`, `position`, `content`) VALUES
                 (1, '.$id_hook.', 1, \'{"cms":[false],"product":["prices-drop","new-products","best-sales"],"static":[false]}\'),
-                (2, '.$id_hook.', 2, \'{"cms":["3","4"],"product":[false],"static":["contact","sitemap","stores"]}\');'
+                (2, '.$id_hook.', 2, \'{"cms":["1","2","3","4","5"],"product":[false],"static":["contact","sitemap","stores"]}\');'
         ];
 
         foreach (Language::getLanguages(true, Context::getContext()->shop->id) as $lang) {
