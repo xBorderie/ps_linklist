@@ -114,11 +114,11 @@ class Ps_LinkList extends Module implements WidgetInterface
 
     public function renderWidget($hookName, array $configuration)
     {
-        $this->context->smarty->assign([
+        $this->smarty->assign([
             'linkBlocks' => $this->getWidgetVariables($hookName, $configuration)
         ]);
 
-        return $this->context->smarty->fetch('module:ps_linklist/views/templates/hook/linkblock.tpl');
+        return $this->fetch('module:ps_linklist/views/templates/hook/linkblock.tpl');
     }
 
     public function getWidgetVariables($hookName, array $configuration)
