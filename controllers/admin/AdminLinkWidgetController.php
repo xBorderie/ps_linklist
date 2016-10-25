@@ -219,10 +219,10 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function setMedia()
     {
+        parent::setMedia();
+
         $this->addJqueryPlugin('tablednd');
         $this->addJS(_PS_JS_DIR_.'admin/dnd.js');
-
-        return parent::setMedia();
     }
 
     private function addNameArrayToPost()
