@@ -54,8 +54,8 @@ class Ps_Linklist extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->getTranslator()->trans('Link List', array(), 'Modules.LinkList');
-        $this->description = $this->getTranslator()->trans('Adds a block with several links.', array(), 'Modules.LinkList');
+        $this->displayName = $this->trans('Link List', array(), 'Modules.LinkList');
+        $this->description = $this->trans('Adds a block with several links.', array(), 'Modules.LinkList');
         $this->secure_key = Tools::encrypt($this->name);
 
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
