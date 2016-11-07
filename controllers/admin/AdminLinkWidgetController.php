@@ -3,6 +3,8 @@
 class AdminLinkWidgetController extends ModuleAdminController
 {
     public $className = 'LinkBlock';
+    private $name;
+    private $repository;
 
     public function __construct()
     {
@@ -38,9 +40,8 @@ class AdminLinkWidgetController extends ModuleAdminController
     public function postProcess()
     {
         if (Tools::isSubmit('submit'.$this->className)) {
-            $this->addNameArrayToPost();
 
-            if (!$this->processSave()) {
+            if (!$this->manageLinkList()) {
                 return false;
             }
 
@@ -49,14 +50,16 @@ class AdminLinkWidgetController extends ModuleAdminController
                 Hook::registerHook($this->module, $hook_name);
             }
 
+            $this->module->_clearCache($this->module->templateFile);
+
             Tools::redirectAdmin($this->context->link->getAdminLink('Admin'.$this->name));
         } elseif (Tools::isSubmit('delete'.$this->className)) {
-            $block = new LinkBlock(Tools::getValue('id_link_block'));
-            $block->delete();
 
-            if (!$this->repository->getCountByIdHook((int)$block->id_hook)) {
-                Hook::unregisterHook($this->module, Hook::getNameById((int)$block->id_hook));
+            if (!$this->deleteLinkList()) {
+                return false;
             }
+
+            $this->module->_clearCache($this->module->templateFile);
 
             Tools::redirectAdmin($this->context->link->getAdminLink('Admin'.$this->name));
         }
@@ -110,7 +113,7 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->fields_form[0]['form'] = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => isset($block) ? $this->module->getTranslator()->trans('Edit the link block.', array(), 'Modules.LinkList') : $this->getTranslator()->trans('New link block', array(), 'Modules.LinkList'),
+                'title' => isset($block) ? $this->module->getTranslator()->trans('Edit the link block.', array(), 'Modules.LinkList') : $this->module->getTranslator()->trans('New link block', array(), 'Modules.LinkList'),
                 'icon' => isset($block) ? 'icon-edit' : 'icon-plus-square'
             ),
             'input' => array(
@@ -225,15 +228,89 @@ class AdminLinkWidgetController extends ModuleAdminController
         $this->addJS(_PS_JS_DIR_.'admin/dnd.js');
     }
 
-    private function addNameArrayToPost()
+    private function manageLinkList()
     {
-        $languages = Language::getLanguages();
-        $names = array();
-        foreach ($languages as $lang) {
-            if ($name = Tools::getValue('name_'.(int)$lang['id_lang'])) {
-                $names[(int)$lang['id_lang']] = $name;
+        $success = true;
+
+        $id_link_block = (int) Tools::getValue('id_link_block');
+        $id_hook = (int) Tools::getValue('id_hook');
+
+        if (!empty($id_hook)) {
+
+            $content = '';
+
+            $cms = Tools::getValue('cms');
+            $content .= '{"cms":[' . (empty($cms) ? 'false': '"' . implode('","', array_map('intval', $cms)) . '"') . '],';
+
+            $product = Tools::getValue('product');
+            $content .= '"product":[' . (empty($product) ? 'false': '"' . implode('","', array_map('bqSQL', $product)) . '"') . '],';
+
+            $static = Tools::getValue('static');
+            $content .= '"static":[' . (empty($static) ? 'false': '"' . implode('","', array_map('bqSQL', $static)) . '"') . ']}';
+
+            if (empty($id_link_block)) {
+                $query = 'INSERT INTO `'._DB_PREFIX_.'link_block` (`id_hook`, `position`, `content`) VALUES
+                (' . $id_hook.', 1, \''.$content. '\')';
+
+                $success &= Db::getInstance()->execute($query);
+                $id_link_block = (int) Db::getInstance()->Insert_ID();
+
+                if (!empty($success) && !empty($id_link_block)) {
+
+                    $languages = Language::getLanguages(true, Context::getContext()->shop->id);
+
+                    if (!empty($languages)) {
+                        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'link_block_lang` (`id_link_block`, `id_lang`, `name`) VALUES ';
+
+                        foreach ($languages as $lang) {
+                            $query .= '(' . $id_link_block . ',' . (int)$lang['id_lang'] . ',\'' . bqSQL(Tools::getValue('name_'.(int)$lang['id_lang'])) . '\'),';
+                        }
+
+                        $success &= Db::getInstance()->execute(rtrim($query, ','));
+                    }
+                }
+
+            } else {
+                $query = 'UPDATE `'._DB_PREFIX_.'link_block` 
+                    SET `content` = \''.$content.'\', `id_hook` = '.$id_hook.' 
+                    WHERE `id_link_block` = '.$id_link_block;
+                $success &= Db::getInstance()->execute($query);
+
+                if (!empty($success) && !empty($id_link_block)) {
+
+                    $languages = Language::getLanguages(true, Context::getContext()->shop->id);
+
+                    if (!empty($languages)) {
+                        foreach ($languages as $lang) {
+                            $query = 'UPDATE `' . _DB_PREFIX_ . 'link_block_lang` 
+                                SET `name` = \''.bqSQL(Tools::getValue('name_'.(int)$lang['id_lang'])).'\' 
+                                WHERE `id_link_block` = '.$id_link_block.' AND `id_lang` = '.(int)$lang['id_lang'];
+                            $success &= Db::getInstance()->execute($query);
+                        }
+                    }
+                }
+            }
+        } else {
+            $success = false;
+        }
+
+        return $success;
+    }
+
+    private function deleteLinkList()
+    {
+        $success = false;
+
+        $id_link_block = (int) Tools::getValue('id_link_block');
+
+        if (!empty($id_link_block)) {
+            $success &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'link_block` WHERE `id_link_block` = '.$id_link_block);
+
+            if ($success) {
+                $success &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'link_block_lang` WHERE `id_link_block` = '.$id_link_block);
             }
         }
-        $_POST['name_link_block'] = $names;
+
+        return $success;
     }
 }

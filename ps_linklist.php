@@ -27,27 +27,28 @@
 
  use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
-if (!defined('_CAN_LOAD_FILES_')) {
-    exit;
-}
+ if (!defined('_CAN_LOAD_FILES_')) {
+     exit;
+ }
 
 include_once(__DIR__ . '/src/LinkBlockRepository.php');
 include_once(__DIR__ . '/src/LinkBlock.php');
 include_once(__DIR__ . '/src/LinkBlockPresenter.php');
 
-class Ps_LinkList extends Module implements WidgetInterface
+class Ps_Linklist extends Module implements WidgetInterface
 {
     protected $_html;
     protected $_display;
     private $linkBlockPresenter;
     private $linkBlockRepository;
 
+    public $templateFile;
+
     public function __construct()
     {
         $this->name = 'ps_linklist';
-        $this->tab = 'front_office_features';
-        $this->version = '1.0.3';
         $this->author = 'PrestaShop';
+        $this->version = '1.0.3';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
@@ -56,16 +57,12 @@ class Ps_LinkList extends Module implements WidgetInterface
         $this->displayName = $this->getTranslator()->trans('Link List', array(), 'Modules.LinkList');
         $this->description = $this->getTranslator()->trans('Adds a block with several links.', array(), 'Modules.LinkList');
         $this->secure_key = Tools::encrypt($this->name);
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
 
-        $this->linkBlockPresenter = new LinkBlockPresenter(
-            new Link(),
-            $this->context->language
-        );
-        $this->linkBlockRepository = new LinkBlockRepository(
-            Db::getInstance(),
-            $this->context->shop
-        );
+        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->templateFile = 'module:ps_linklist/views/templates/hook/linkblock.tpl';
+
+        $this->linkBlockPresenter = new LinkBlockPresenter(new Link(), $this->context->language);
+        $this->linkBlockRepository = new LinkBlockRepository(Db::getInstance(), $this->context->shop);
     }
 
     public function install()
@@ -105,6 +102,11 @@ class Ps_LinkList extends Module implements WidgetInterface
         return $tab->delete();
     }
 
+    public function _clearCache($template, $cache_id = null, $compile_id = null)
+    {
+        parent::_clearCache($this->templateFile);
+    }
+
     public function getContent()
     {
         Tools::redirectAdmin(
@@ -114,16 +116,19 @@ class Ps_LinkList extends Module implements WidgetInterface
 
     public function renderWidget($hookName, array $configuration)
     {
-        $this->smarty->assign([
-            'linkBlocks' => $this->getWidgetVariables($hookName, $configuration)
-        ]);
+        $key = 'ps_linklist|' . $hookName;
 
-        return $this->fetch('module:ps_linklist/views/templates/hook/linkblock.tpl');
+        if (!$this->isCached($this->templateFile, $this->getCacheId($key))) {
+            $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
+        }
+
+        return $this->fetch($this->templateFile, $this->getCacheId($key));
     }
 
     public function getWidgetVariables($hookName, array $configuration)
     {
         $id_hook = Hook::getIdByName($hookName);
+
         $linkBlocks = $this->linkBlockRepository->getByIdHook($id_hook);
 
         $blocks = array();
@@ -131,6 +136,8 @@ class Ps_LinkList extends Module implements WidgetInterface
             $blocks[] = $this->linkBlockPresenter->present($block);
         }
 
-        return $blocks;
+        return array(
+            'linkBlocks' => $blocks
+        );
     }
 }
