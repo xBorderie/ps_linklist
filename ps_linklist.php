@@ -62,7 +62,7 @@ class Ps_Linklist extends Module implements WidgetInterface
         $this->templateFile = 'module:ps_linklist/views/templates/hook/linkblock.tpl';
 
         $this->linkBlockPresenter = new LinkBlockPresenter(new Link(), $this->context->language);
-        $this->linkBlockRepository = new LinkBlockRepository(Db::getInstance(), $this->context->shop);
+        $this->linkBlockRepository = new LinkBlockRepository(Db::getInstance(), $this->context->shop, $this->context->getTranslator());
     }
 
     public function install()

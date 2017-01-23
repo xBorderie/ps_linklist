@@ -1,16 +1,20 @@
 <?php
 
+use \PrestaShopBundle\Translation\TranslatorComponent as Translator;
+
 class LinkBlockRepository
 {
     private $db;
     private $shop;
     private $db_prefix;
+    private $translator;
 
-    public function __construct(Db $db, Shop $shop)
+    public function __construct(Db $db, Shop $shop, Translator $translator)
     {
         $this->db = $db;
         $this->shop = $shop;
         $this->db_prefix = $db->getPrefix();
+        $this->translator = $translator;
     }
 
     public function createTables()
@@ -265,10 +269,13 @@ class LinkBlockRepository
                 (2, '.$id_hook.', 2, \'{"cms":["1","2","3","4","5"],"product":[false],"static":["contact","sitemap","stores"]}\');'
         ];
 
+        $product = $this->translator->trans('Products', array(), 'Modules.Linklist');
+        $ourCompany = $this->translator->trans('Our company', array(), 'Modules.Linklist');
+
         foreach (Language::getLanguages(true, Context::getContext()->shop->id) as $lang) {
             $queries[] = 'INSERT INTO `'.$this->db_prefix.'link_block_lang` (`id_link_block`, `id_lang`, `name`) VALUES
-                (1,'.$lang['id_lang'].', \'Products\'),
-                (2, '.$lang['id_lang'].', \'Our company\')'
+                (1, '.(int)$lang['id_lang'].', "'.pSQL($product).'"),
+                (2, '.(int)$lang['id_lang'].', "'.pSQL($ourCompany).'")'
             ;
         }
 
