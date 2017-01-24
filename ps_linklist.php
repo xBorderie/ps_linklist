@@ -71,7 +71,8 @@ class Ps_Linklist extends Module implements WidgetInterface
             && $this->installTab()
             && $this->linkBlockRepository->createTables()
             && $this->linkBlockRepository->installFixtures()
-            && $this->registerHook('displayFooter');
+            && $this->registerHook('displayFooter')
+            && $this->registerHook('actionUpdateLangAfter');
     }
 
     public function uninstall()
@@ -100,6 +101,15 @@ class Ps_Linklist extends Module implements WidgetInterface
         $id_tab = (int)Tab::getIdFromClassName('AdminLinkWidget');
         $tab = new Tab($id_tab);
         return $tab->delete();
+    }
+
+    public function hookActionUpdateLangAfter($params)
+    {
+        if (!empty($params['lang']) && $params['lang'] instanceOf Language) {
+            include_once _PS_MODULE_DIR_ . $this->name . '/lang/LinkBlockLang.php';
+
+            Language::updateMultilangFromClass(_DB_PREFIX_ . 'link_block_lang', 'LinkBlockLang', $params['lang']);
+        }
     }
 
     public function _clearCache($template, $cache_id = null, $compile_id = null)
