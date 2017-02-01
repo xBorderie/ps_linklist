@@ -54,11 +54,11 @@ class Ps_Linklist extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Link List', array(), 'Modules.LinkList');
-        $this->description = $this->trans('Adds a block with several links.', array(), 'Modules.LinkList');
+        $this->displayName = $this->trans('Link List', array(), 'Modules.Linklist.Admin');
+        $this->description = $this->trans('Adds a block with several links.', array(), 'Modules.Linklist.Admin');
         $this->secure_key = Tools::encrypt($this->name);
 
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
         $this->templateFile = 'module:ps_linklist/views/templates/hook/linkblock.tpl';
 
         $this->linkBlockPresenter = new LinkBlockPresenter(new Link(), $this->context->language);
