@@ -27,7 +27,7 @@
 class LinkBlockLang extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Modules.Linklist';
+    protected $domain = 'Modules.Linklist.Admin';
 
     protected $keys = array('id_link_block');
 
@@ -37,8 +37,8 @@ class LinkBlockLang extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Products') => $this->translator->trans('Products', array(), 'Modules.Linklist', $this->locale),
-                md5('Our company') => $this->translator->trans('Our company', array(), 'Modules.Linklist', $this->locale),
+                md5('Products') => $this->translator->trans('Products', array(), 'Modules.Linklist.Admin', $this->locale),
+                md5('Our company') => $this->translator->trans('Our company', array(), 'Modules.Linklist.Admin', $this->locale),
             ),
         );
     }
