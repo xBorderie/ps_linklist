@@ -40,7 +40,13 @@ class AdminLinkWidgetController extends ModuleAdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('submit'.$this->className)) {
+        if (Tools::isSubmit('action')) {
+            switch (Tools::getValue('action')) {
+                case 'updatePositions':
+                    $this->updatePositions();
+                    break;
+            }
+        } elseif (Tools::isSubmit('submit'.$this->className)) {
             if (!$this->manageLinkList()) {
                 return false;
             }
@@ -232,6 +238,26 @@ class AdminLinkWidgetController extends ModuleAdminController
 
         $this->addJqueryPlugin('tablednd');
         $this->addJS(_PS_JS_DIR_.'admin/dnd.js');
+    }
+
+    private function updatePositions()
+    {
+        if (!Tools::isSubmit('link_block_0')) {
+            return false;
+        }
+
+        $linkBlocks = Tools::getValue('link_block_0');
+        $query = 'UPDATE `' . _DB_PREFIX_ . 'link_block` SET `position` = CASE `id_link_block` ';
+
+        foreach ($linkBlocks as $position => $linkBlock) {
+            preg_match('/tr_\d+_(\d+)_\d+/', $linkBlock, $matches);
+            if (isset($matches[1])) {
+                $query .= 'WHEN ' . $matches[1] . ' THEN ' . $position . ' ';
+            }
+        }
+
+        $query .= 'ELSE `position` END';
+        return DB::getInstance()->execute($query);
     }
 
     private function manageLinkList()
