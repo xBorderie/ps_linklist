@@ -22,7 +22,8 @@ class AdminLinkWidgetController extends ModuleAdminController
 
         $this->repository = new LinkBlockRepository(
             Db::getInstance(),
-            $this->context->shop
+            $this->context->shop,
+            $this->context->getTranslator()
         );
     }
 
