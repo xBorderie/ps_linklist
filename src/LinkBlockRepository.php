@@ -136,6 +136,7 @@ class LinkBlockRepository
         $sql = "SELECT cb.`id_link_block`
                     FROM {$this->db_prefix}link_block cb
                     WHERE `id_hook` = $id_hook
+                    ORDER by cb.`position`
                 ";
         $ids = $this->db->executeS($sql);
 
