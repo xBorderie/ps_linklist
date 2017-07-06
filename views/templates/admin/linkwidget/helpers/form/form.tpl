@@ -234,7 +234,7 @@
                 </tr>
                 {foreach $input.values[$lang['id_lang']] as $key => $page}
                   <tr {if $key%2}class="alt_row"{/if} data-item="{$key}">
-                    <td><a href="#" class="js-clear-custom-link"><i class="material-icons action-disabled">{l s='Clear' d='Admin.Actions'}</i></a></td>
+                    <td><a href="#" class="js-clear-custom-link"><i class="material-icons action-disabled">&#xE14C;</i></a></td>
                     <td>
                       <label class="control-label">
                         <input type="text" name="custom[{$lang['id_lang']}][{$key}][title]" value="{$page.title}"/>
